@@ -1,9 +1,8 @@
 package isi.cinema.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class User {
@@ -12,12 +11,17 @@ public class User {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private String email;
+    private String login;
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Ticket> tickets;
 
     protected User() {}
 
-    public User(String email, String password) {
+    public User(String email, String login, String password) {
         this.email = email;
+        this.login = login;
         this.password = password;
     }
 
@@ -34,6 +38,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getLogin() {
+        return login;
     }
 
     public String getPassword() {
