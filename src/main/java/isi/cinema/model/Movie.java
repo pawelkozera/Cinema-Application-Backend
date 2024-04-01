@@ -26,6 +26,13 @@ public class Movie {
                     referencedColumnName = "id"))
     private List<ScreeningSchedule> screeningSchedules;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "movieCinema",
+            joinColumns = @JoinColumn(name = "cinemaId", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "movieId",
+                    referencedColumnName = "id"))
+    private List<Cinema> cinemas;
+
     protected Movie() {}
 
     public Movie(String title, String ageRating, String description, int length, String countryProduction, String yearProduction) {
