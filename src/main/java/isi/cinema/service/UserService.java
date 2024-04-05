@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -21,5 +23,11 @@ public class UserService {
         user.setPassword(encodedPassword);
 
         return userRepository.save(user);
+    }
+
+    public User getUserById(Long id) {
+        Optional<User> customer = userRepository.findById(id);
+
+        return customer.orElse(null);
     }
 }
