@@ -11,6 +11,7 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -18,16 +19,28 @@ public class UserService {
     }
 
     public User register(User user) {
-        Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
         String encodedPassword = encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
         return userRepository.save(user);
     }
 
-    public User getUserById(Long id) {
-        Optional<User> customer = userRepository.findById(id);
+    public User login(User user) {
+        Optional<User> userExist = userRepository.findByLogin(user.getLogin());
 
-        return customer.orElse(null);
+        if (userExist.isPresent()) {
+            User existingUser = userExist.get();
+            if (encoder.matches(user.getPassword(), existingUser.getPassword())) {
+                return existingUser;
+            }
+        }
+
+        return null;
+    }
+
+    public User getUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        return user.orElse(null);
     }
 }
