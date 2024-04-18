@@ -43,4 +43,22 @@ public class UserService {
 
         return user.orElse(null);
     }
+
+    public Iterable<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public User updateUser(Long id, User updatedCustomer) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setLogin(updatedCustomer.getLogin());
+            return userRepository.save(user);
+        }
+        return  null;
+    }
 }
