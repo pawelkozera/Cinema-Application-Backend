@@ -19,4 +19,16 @@ public class Cinema {
     public Cinema(String name) {
         this.name = name;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Movie> getMovies() {
+        return movies;
+    }
 }
