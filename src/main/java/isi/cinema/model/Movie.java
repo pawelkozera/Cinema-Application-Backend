@@ -1,10 +1,13 @@
 package isi.cinema.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
 public class Movie {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -15,6 +18,9 @@ public class Movie {
     private int length;
     private String countryProduction;
     private String yearProduction;
+    private String category;
+    private String type;
+
 
     @OneToMany(mappedBy = "movie")
     private List<Ticket> tickets;
@@ -26,7 +32,7 @@ public class Movie {
                     referencedColumnName = "id"))
     private List<ScreeningSchedule> screeningSchedules;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "movieCinema",
             joinColumns = @JoinColumn(name = "cinemaId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "movieId",
@@ -35,12 +41,62 @@ public class Movie {
 
     protected Movie() {}
 
-    public Movie(String title, String ageRating, String description, int length, String countryProduction, String yearProduction) {
+    public Movie(String title, String ageRating, String description, int length, String countryProduction, String yearProduction, String category, String type) {
         this.title = title;
         this.ageRating = ageRating;
         this.description = description;
         this.length = length;
         this.countryProduction = countryProduction;
         this.yearProduction = yearProduction;
+        this.category = category;
+        this.type = type;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAgeRating() {
+        return ageRating;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public String getCountryProduction() {
+        return countryProduction;
+    }
+
+    public String getYearProduction() {
+        return yearProduction;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public List<ScreeningSchedule> getScreeningSchedules() {
+        return screeningSchedules;
+    }
+
+    public List<Cinema> getCinemas() {
+        return cinemas;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getType() {
+        return type;
     }
 }
