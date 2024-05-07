@@ -24,9 +24,15 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @GetMapping("/movies")
-    public ResponseEntity<List<Map<String, Object>>> getAllMoviesWithScreeningSchedules() {
-        List<Map<String, Object>> moviesWithScreeningSchedules = movieService.findAllMoviesWithScreeningSchedulesByCinemaName();
+    @GetMapping("{cinemaName}/movies")
+    public ResponseEntity<List<Map<String, Object>>> getAllMoviesWithScreeningSchedules(@PathVariable String cinemaName) {
+        List<Map<String, Object>> moviesWithScreeningSchedules = movieService.findAllMoviesWithScreeningSchedulesByCinemaName(cinemaName);
         return ResponseEntity.ok(moviesWithScreeningSchedules);
+    }
+
+    @GetMapping("{cinemaName}/movies/{movieId}")
+    public ResponseEntity<List<Map<String, Object>>> getMovieById(@PathVariable Long movieId) {
+        List<Map<String, Object>> movie = movieService.findMovieById(movieId);
+        return ResponseEntity.ok(movie);
     }
 }
