@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
 public class Ticket {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID uuid;
     private String price;
     private List<String> seats;
     private int amount;
@@ -47,9 +49,6 @@ public class Ticket {
         this.screeningSchedule = screeningSchedule;
     }
 
-    public Long getId() {
-        return id;
-    }
 
     public String getPrice() {
         return price;
@@ -69,10 +68,6 @@ public class Ticket {
 
     public Movie getMovie() {
         return movie;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setPrice(String price) {
@@ -95,10 +90,18 @@ public class Ticket {
         this.movie = movie;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String toString() {
         return "Ticket{" +
-                "id=" + id +
+                "uuid=" + uuid +
                 ", price='" + price + '\'' +
                 ", seats=" + seats +
                 ", amount=" + amount +
