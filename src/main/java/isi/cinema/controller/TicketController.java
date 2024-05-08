@@ -30,17 +30,8 @@ public class TicketController {
 
     @GetMapping("/ticket/{uuid}")
     public ResponseEntity<TicketDTO> getTicketByUUID(@PathVariable UUID uuid) {
-        Ticket ticket = ticketService.getTicketByUUID(uuid);
-        if (ticket != null) {
-            TicketDTO ticketDTO = new TicketDTO();
-            ticketDTO.setUuid(ticket.getUuid());
-            ticketDTO.setPrice(ticket.getPrice());
-            ticketDTO.setSeats(ticket.getSeats());
-            ticketDTO.setAmount(ticket.getAmount());
-            ticketDTO.setMovieTitle(ticket.getMovie().getTitle());
-            ticketDTO.setScreeningDate(ticket.getScreeningSchedule().getDate());
-            ticketDTO.setScreeningFormat(ticket.getScreeningSchedule().getFormat());
-
+        TicketDTO ticketDTO = ticketService.getTicketByUUID(uuid);
+        if (ticketDTO != null) {
             return ResponseEntity.ok(ticketDTO);
         } else {
             return ResponseEntity.notFound().build();

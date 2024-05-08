@@ -1,5 +1,6 @@
 package isi.cinema.controller;
 
+import isi.cinema.DTO.MovieDTO;
 import isi.cinema.model.Movie;
 import isi.cinema.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,14 @@ public class MovieController {
     }
 
     @GetMapping("{cinemaName}/movies")
-    public ResponseEntity<List<Map<String, Object>>> getAllMoviesWithScreeningSchedules(@PathVariable String cinemaName) {
-        List<Map<String, Object>> moviesWithScreeningSchedules = movieService.findAllMoviesWithScreeningSchedulesByCinemaName(cinemaName);
+    public ResponseEntity<List<MovieDTO>> getAllMoviesWithScreeningSchedules(@PathVariable String cinemaName) {
+        List<MovieDTO> moviesWithScreeningSchedules = movieService.findAllMoviesWithScreeningSchedulesByCinemaName(cinemaName);
         return ResponseEntity.ok(moviesWithScreeningSchedules);
     }
 
     @GetMapping("{cinemaName}/movies/{movieId}")
-    public ResponseEntity<List<Map<String, Object>>> getMovieById(@PathVariable Long movieId) {
-        List<Map<String, Object>> movie = movieService.findMovieById(movieId);
+    public ResponseEntity<List<MovieDTO>> getMovieById(@PathVariable Long movieId) {
+        List<MovieDTO> movie = movieService.findMovieById(movieId);
         return ResponseEntity.ok(movie);
     }
 }

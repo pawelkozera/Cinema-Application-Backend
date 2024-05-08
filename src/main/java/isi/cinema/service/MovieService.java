@@ -1,15 +1,14 @@
 package isi.cinema.service;
 
+import isi.cinema.DTO.MovieDTO;
+import isi.cinema.DTO.ScreeningScheduleDTO;
 import isi.cinema.model.Movie;
 import isi.cinema.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,58 +20,65 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<Map<String, Object>> findAllMoviesWithScreeningSchedulesByCinemaName(String cinemaName) {
+    public List<MovieDTO> findAllMoviesWithScreeningSchedulesByCinemaName(String cinemaName) {
         List<Movie> movies = movieRepository.findAllMoviesByCinemaName(cinemaName);
 
         return movies.stream().map(movie -> {
-            Map<String, Object> movieInfo = new HashMap<>();
-            movieInfo.put("id", movie.getId());
-            movieInfo.put("title", movie.getTitle());
-            movieInfo.put("category", movie.getCategory());
-            movieInfo.put("type", movie.getType());
+            MovieDTO movieDTO = new MovieDTO();
+            movieDTO.setId(movie.getId());
+            movieDTO.setTitle(movie.getTitle());
+            movieDTO.setCategory(movie.getCategory());
+            movieDTO.setType(movie.getType());
 
-            List<Map<String, String>> screeningDates = movie.getScreeningSchedules().stream()
+            List<ScreeningScheduleDTO> screeningDates = movie.getScreeningSchedules().stream()
                     .map(screeningSchedule -> {
-                        Map<String, String> scheduleInfo = new HashMap<>();
-                        scheduleInfo.put("id", screeningSchedule.getId().toString());
-                        scheduleInfo.put("date", screeningSchedule.getDate().toString());
-                        scheduleInfo.put("format", screeningSchedule.getFormat());
-                        return scheduleInfo;
+                        ScreeningScheduleDTO scheduleDTO = new ScreeningScheduleDTO();
+                        scheduleDTO.setId(screeningSchedule.getId());
+                        scheduleDTO.setDate(screeningSchedule.getDate());
+                        scheduleDTO.setFormat(screeningSchedule.getFormat());
+                        return scheduleDTO;
                     })
                     .collect(Collectors.toList());
-            movieInfo.put("screeningDates", screeningDates);
 
-            return movieInfo;
+            movieDTO.setScreeningDates(screeningDates);
+
+            return movieDTO;
         }).collect(Collectors.toList());
     }
 
-    public List<Map<String, Object>> findMovieById(Long movieId) {
-        Optional<Movie> movies = movieRepository.findById(movieId);
+    public List<MovieDTO> findMovieById(Long movieId) {
+        Optional<Movie> movieOptional = movieRepository.findById(movieId);
+        if (movieOptional.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-        return movies.stream().map(movie -> {
-            Map<String, Object> movieInfo = new HashMap<>();
-            movieInfo.put("id", movie.getId());
-            movieInfo.put("title", movie.getTitle());
-            movieInfo.put("category", movie.getCategory());
-            movieInfo.put("type", movie.getType());
-            movieInfo.put("ageRating", movie.getAgeRating());
-            movieInfo.put("description", movie.getDescription());
-            movieInfo.put("length", movie.getLength());
-            movieInfo.put("countryProduction", movie.getCountryProduction());
-            movieInfo.put("yearProduction", movie.getYearProduction());
+        Movie movie = movieOptional.get();
+        List<MovieDTO> movieDTOs = new ArrayList<>();
 
-            List<Map<String, String>> screeningDates = movie.getScreeningSchedules().stream()
-                    .map(screeningSchedule -> {
-                        Map<String, String> scheduleInfo = new HashMap<>();
-                        scheduleInfo.put("id", screeningSchedule.getId().toString());
-                        scheduleInfo.put("date", screeningSchedule.getDate().toString());
-                        scheduleInfo.put("format", screeningSchedule.getFormat());
-                        return scheduleInfo;
-                    })
-                    .collect(Collectors.toList());
-            movieInfo.put("screeningDates", screeningDates);
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(movie.getId());
+        movieDTO.setTitle(movie.getTitle());
+        movieDTO.setCategory(movie.getCategory());
+        movieDTO.setType(movie.getType());
+        movieDTO.setAgeRating(movie.getAgeRating());
+        movieDTO.setDescription(movie.getDescription());
+        movieDTO.setLength(movie.getLength());
+        movieDTO.setCountryProduction(movie.getCountryProduction());
+        movieDTO.setYearProduction(movie.getYearProduction());
 
-            return movieInfo;
-        }).collect(Collectors.toList());
+        List<ScreeningScheduleDTO> screeningScheduleDTOs = movie.getScreeningSchedules().stream()
+                .map(screeningSchedule -> {
+                    ScreeningScheduleDTO scheduleDTO = new ScreeningScheduleDTO();
+                    scheduleDTO.setId(screeningSchedule.getId());
+                    scheduleDTO.setDate(screeningSchedule.getDate());
+                    scheduleDTO.setFormat(screeningSchedule.getFormat());
+                    return scheduleDTO;
+                })
+                .collect(Collectors.toList());
+
+        movieDTO.setScreeningDates(screeningScheduleDTOs);
+        movieDTOs.add(movieDTO);
+
+        return movieDTOs;
     }
 }
