@@ -1,5 +1,6 @@
 package isi.cinema.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -13,11 +14,15 @@ public class ScreeningSchedule {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     private Date date;
     private String format;
 
     @ManyToMany(mappedBy = "screeningSchedules", fetch = FetchType.LAZY)
     private List<Movie> movies;
+
+    @OneToMany(mappedBy = "screeningSchedule", fetch = FetchType.LAZY)
+    private List<Ticket> tickets;
 
     protected ScreeningSchedule() {}
 
@@ -25,6 +30,15 @@ public class ScreeningSchedule {
         this.date = date;
         this.format = format;
     }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
 
     public Long getId() {
         return id;

@@ -34,6 +34,7 @@ public class MovieService {
             List<Map<String, String>> screeningDates = movie.getScreeningSchedules().stream()
                     .map(screeningSchedule -> {
                         Map<String, String> scheduleInfo = new HashMap<>();
+                        scheduleInfo.put("id", screeningSchedule.getId().toString());
                         scheduleInfo.put("date", screeningSchedule.getDate().toString());
                         scheduleInfo.put("format", screeningSchedule.getFormat());
                         return scheduleInfo;
@@ -63,6 +64,7 @@ public class MovieService {
             List<Map<String, String>> screeningDates = movie.getScreeningSchedules().stream()
                     .map(screeningSchedule -> {
                         Map<String, String> scheduleInfo = new HashMap<>();
+                        scheduleInfo.put("id", screeningSchedule.getId().toString());
                         scheduleInfo.put("date", screeningSchedule.getDate().toString());
                         scheduleInfo.put("format", screeningSchedule.getFormat());
                         return scheduleInfo;
