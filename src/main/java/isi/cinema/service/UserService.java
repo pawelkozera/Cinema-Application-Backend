@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public User login(User user) {
-        Optional<User> userExist = userRepository.findByLogin(user.getLogin());
+        Optional<User> userExist = userRepository.findByUsername(user.getUsername());
 
         if (userExist.isPresent()) {
             User existingUser = userExist.get();
@@ -56,7 +56,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(id);
         if(userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setLogin(updatedCustomer.getLogin());
+            user.setUsername(updatedCustomer.getUsername());
             return userRepository.save(user);
         }
         return  null;
