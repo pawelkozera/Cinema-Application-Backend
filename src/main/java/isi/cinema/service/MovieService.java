@@ -3,6 +3,7 @@ package isi.cinema.service;
 import isi.cinema.DTO.MovieDTO;
 import isi.cinema.DTO.ScreeningScheduleDTO;
 import isi.cinema.model.Movie;
+import isi.cinema.model.User;
 import isi.cinema.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,14 @@ public class MovieService {
     @Autowired
     public MovieService(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
+    }
+
+    public Movie addMovie(Movie movie) {
+        return movieRepository.save(movie);
+    }
+
+    public void deleteMovieById(Long id) {
+        movieRepository.deleteById(id);
     }
 
     public List<MovieDTO> findAllMoviesWithScreeningSchedulesByCinemaName(String cinemaName) {

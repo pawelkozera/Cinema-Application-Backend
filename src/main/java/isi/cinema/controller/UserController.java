@@ -43,13 +43,13 @@ public class UserController {
     }
 
     @GetMapping("/checkRole")
-    public ResponseEntity<?> checkRole(@RequestParam("role") Role role, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
+    public ResponseEntity<?> checkRole(Authentication authentication, Role role) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        if (!userAuthentication.checkAuthentication(authentication)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
 
-        User user = (User) authentication.getPrincipal();
-        if (!user.getRole().equals(role)) {
+        if (!userAuthentication.checkRole(authentication, role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions");
         }
 
