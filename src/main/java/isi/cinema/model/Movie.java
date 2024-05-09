@@ -99,4 +99,52 @@ public class Movie {
     public String getType() {
         return type;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAgeRating(String ageRating) {
+        this.ageRating = ageRating;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    public void setCountryProduction(String countryProduction) {
+        this.countryProduction = countryProduction;
+    }
+
+    public void setYearProduction(String yearProduction) {
+        this.yearProduction = yearProduction;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
+    public void setScreeningSchedules(List<ScreeningSchedule> screeningSchedules) {
+        this.screeningSchedules = screeningSchedules;
+    }
+
+    public void setCinemas(List<Cinema> cinemas) {
+        this.cinemas = cinemas;
+    }
 }

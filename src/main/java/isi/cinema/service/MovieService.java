@@ -29,6 +29,23 @@ public class MovieService {
         movieRepository.deleteById(id);
     }
 
+    public Movie updateMovie(Long id, Movie updatedMovie) {
+        Optional<Movie> movieOptional = movieRepository.findById(id);
+        if(movieOptional.isPresent()) {
+            Movie movie = movieOptional.get();
+            movie.setTitle(updatedMovie.getTitle());
+            movie.setScreeningSchedules(updatedMovie.getScreeningSchedules());
+            movie.setAgeRating(updatedMovie.getAgeRating());
+            movie.setDescription(updatedMovie.getDescription());
+            movie.setLength(updatedMovie.getLength());
+            movie.setCountryProduction(updatedMovie.getCountryProduction());
+            movie.setYearProduction(updatedMovie.getYearProduction());
+
+            return movieRepository.save(movie);
+        }
+        return  null;
+    }
+
     public List<MovieDTO> findAllMoviesWithScreeningSchedulesByCinemaName(String cinemaName) {
         List<Movie> movies = movieRepository.findAllMoviesByCinemaName(cinemaName);
 

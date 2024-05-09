@@ -55,4 +55,20 @@ public class ScreeningSchedule {
     public List<Movie> getMovies() {
         return movies;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
+    }
 }

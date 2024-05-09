@@ -2,11 +2,13 @@ package isi.cinema.controller;
 
 import isi.cinema.DTO.MovieDTO;
 import isi.cinema.model.Movie;
+import isi.cinema.model.Role;
 import isi.cinema.model.User;
 import isi.cinema.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,15 +37,42 @@ public class MovieController {
     }
 
     @PostMapping("/addMovie")
-    public ResponseEntity<Movie> addMovie(@RequestBody Movie movie) {
+    public ResponseEntity<Movie> addMovie(@RequestBody Movie movie, Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        ResponseEntity<Movie> authorizationResponse = (ResponseEntity<Movie>) userAuthentication.checkAdminAuthorization(authentication);
+        if (authorizationResponse != null) {
+            return authorizationResponse;
+        }
+
         Movie addedMovie = movieService.addMovie(movie);
 
         return new ResponseEntity<>(addedMovie, HttpStatus.CREATED);
     }
 
     @RequestMapping(value="/delete/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
-    public ResponseEntity<?> deleteMovie(@PathVariable Long id) {
+    public ResponseEntity<Movie> deleteMovie(@PathVariable Long id, Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        ResponseEntity<Movie> authorizationResponse = (ResponseEntity<Movie>) userAuthentication.checkAdminAuthorization(authentication);
+        if (authorizationResponse != null) {
+            return authorizationResponse;
+        }
+
         movieService.deleteMovieById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movie, Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        ResponseEntity<Movie> authorizationResponse = (ResponseEntity<Movie>) userAuthentication.checkAdminAuthorization(authentication);
+        if (authorizationResponse != null) {
+            return authorizationResponse;
+        }
+
+        Movie updatedMovie = movieService.updateMovie(id, movie);
+        if(updatedMovie != null) {
+            return ResponseEntity.ok(updatedMovie);
+        }
+        return ResponseEntity.notFound().build();
     }
 }
