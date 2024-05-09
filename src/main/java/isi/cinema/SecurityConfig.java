@@ -29,7 +29,7 @@ public class SecurityConfig extends AbstractHttpConfigurer {
                         {
                             try {
                                 authorizeRequests
-                                        .requestMatchers("/api/auth/**","/api/**","/h2-console/**")
+                                        .requestMatchers("/api/**","/api/auth/**")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated()
@@ -37,7 +37,6 @@ public class SecurityConfig extends AbstractHttpConfigurer {
                                         .sessionManagement(httpSecuritySessionManagementConfigurer ->
                                         httpSecuritySessionManagementConfigurer
                                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
                                                         );
                             } catch (Exception e) {
                                 throw new RuntimeException(e);

@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Ticket {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(columnDefinition = "BINARY(16)")
+   // @Column(columnDefinition = "BINARY(16)")
     private UUID uuid;
     private String price;
     private List<String> seats;
