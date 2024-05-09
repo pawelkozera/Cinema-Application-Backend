@@ -1,10 +1,12 @@
 package isi.cinema.controller;
 
+import isi.cinema.model.Role;
 import isi.cinema.model.User;
 import isi.cinema.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,6 +40,20 @@ public class UserController {
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @GetMapping("/checkRole")
+    public ResponseEntity<?> checkRole(@RequestParam("role") Role role, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+        }
+
+        User user = (User) authentication.getPrincipal();
+        if (!user.getRole().equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions");
+        }
+
+        return ResponseEntity.ok("Authorized access");
     }
 
     @RequestMapping(value="/delete/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
