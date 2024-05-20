@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ScreeningScheduleService {
@@ -42,5 +43,12 @@ public class ScreeningScheduleService {
             return screeningScheduleRepository.save(screeningSchedule);
         }
         return  null;
+    }
+
+    public List<ScreeningScheduleDTO> getAllScreeningSchedules() {
+        Iterable<ScreeningSchedule> screeningSchedules = screeningScheduleRepository.findAll();
+        return StreamSupport.stream(screeningSchedules.spliterator(), false)
+                .map(schedule -> new ScreeningScheduleDTO(schedule.getId(), schedule.getDate(), schedule.getFormat()))
+                .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,9 @@ package isi.cinema.service;
 
 import isi.cinema.DTO.MovieDTO;
 import isi.cinema.DTO.ScreeningScheduleDTO;
+import isi.cinema.model.Cinema;
 import isi.cinema.model.Movie;
+import isi.cinema.model.Ticket;
 import isi.cinema.model.User;
 import isi.cinema.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,27 @@ public class MovieService {
     }
 
     public void deleteMovieById(Long id) {
-        movieRepository.deleteById(id);
+        Movie movieToDelete = movieRepository.findById(id).orElse(null);
+
+        if (movieToDelete != null) {
+            for (Cinema cinema : movieToDelete.getCinemas()) {
+                cinema.getMovies().remove(movieToDelete);
+            }
+
+            for (Ticket ticket : movieToDelete.getTickets()) {
+                if (ticket.getMovie() != null) {
+                    return;
+                }
+            }
+
+            movieToDelete.getCinemas().clear();
+            movieToDelete.getScreeningSchedules().clear();
+            movieToDelete.getTickets().clear();
+
+            movieRepository.delete(movieToDelete);
+        }
     }
+
 
     public Movie updateMovie(Long id, Movie updatedMovie) {
         Optional<Movie> movieOptional = movieRepository.findById(id);

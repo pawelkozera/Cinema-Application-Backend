@@ -1,6 +1,7 @@
 package isi.cinema.controller;
 
 import isi.cinema.DTO.MovieDTO;
+import isi.cinema.DTO.ScreeningScheduleDTO;
 import isi.cinema.model.Movie;
 import isi.cinema.model.Role;
 import isi.cinema.model.ScreeningSchedule;
@@ -63,5 +64,20 @@ public class ScreeningScheduleController {
             return ResponseEntity.ok(updatedScreeningSchedule);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/getSchedules")
+    public ResponseEntity<List<ScreeningScheduleDTO>> getAllMoviesWithScreeningSchedules(Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        if (!userAuthentication.checkAuthentication(authentication)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!userAuthentication.checkRole(authentication, Role.ADMIN)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        List<ScreeningScheduleDTO> screeningSchedulesDTO = screeningScheduleService.getAllScreeningSchedules();
+        return ResponseEntity.ok(screeningSchedulesDTO);
     }
 }

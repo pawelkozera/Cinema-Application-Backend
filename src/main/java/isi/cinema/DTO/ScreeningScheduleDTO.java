@@ -7,6 +7,15 @@ public class ScreeningScheduleDTO {
     private Date date;
     private String format;
 
+    public ScreeningScheduleDTO() {
+    }
+
+    public ScreeningScheduleDTO(Long id, Date date, String format) {
+        this.id = id;
+        this.date = date;
+        this.format = format;
+    }
+
     public Long getId() {
         return id;
     }
