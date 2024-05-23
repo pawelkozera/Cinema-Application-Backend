@@ -12,3 +12,9 @@ spring:
           format_sql: true
       database: postgresql
       database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+paypal:
+  client:
+    id:
+    secret:
+  mode: sandbox

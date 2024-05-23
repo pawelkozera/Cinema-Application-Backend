@@ -67,7 +67,7 @@ public class ScreeningScheduleController {
     }
 
     @GetMapping("/getSchedules")
-    public ResponseEntity<List<ScreeningScheduleDTO>> getAllMoviesWithScreeningSchedules(Authentication authentication) {
+    public ResponseEntity<List<ScreeningScheduleDTO>> getScreeningSchedule(Authentication authentication) {
         UserAuthentication userAuthentication = new UserAuthentication();
         if (!userAuthentication.checkAuthentication(authentication)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
