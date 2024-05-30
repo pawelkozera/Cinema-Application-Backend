@@ -37,14 +37,14 @@ public class MovieController {
     }
 
     @PostMapping("/addMovie")
-    public ResponseEntity<Movie> addMovie(@RequestBody Movie movie, Authentication authentication) {
+    public ResponseEntity<Movie> addMovie(@RequestBody MovieDTO movieDTO, Authentication authentication) {
         UserAuthentication userAuthentication = new UserAuthentication();
         ResponseEntity<Movie> authorizationResponse = (ResponseEntity<Movie>) userAuthentication.checkAdminAuthorization(authentication);
         if (authorizationResponse != null) {
             return authorizationResponse;
         }
 
-        Movie addedMovie = movieService.addMovie(movie);
+        Movie addedMovie = movieService.addMovie(movieDTO);
 
         return new ResponseEntity<>(addedMovie, HttpStatus.CREATED);
     }

@@ -41,7 +41,7 @@ public class Movie {
 
     protected Movie() {}
 
-    public Movie(String title, String ageRating, String description, int length, String countryProduction, String yearProduction, String category, String type) {
+    public Movie(String title, String ageRating, String description, int length, String countryProduction, String yearProduction, String category, String type, List<ScreeningSchedule> screeningSchedules, List<Cinema> cinemas) {
         this.title = title;
         this.ageRating = ageRating;
         this.description = description;
@@ -50,6 +50,8 @@ public class Movie {
         this.yearProduction = yearProduction;
         this.category = category;
         this.type = type;
+        this.screeningSchedules = screeningSchedules;
+        this.cinemas = cinemas;
     }
 
     public Long getId() {

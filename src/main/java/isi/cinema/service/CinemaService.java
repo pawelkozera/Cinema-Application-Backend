@@ -20,6 +20,9 @@ public class CinemaService {
         this.cinemaRepository = cinemaRepository;
     }
 
+    public List<Cinema> getAllCinemas() {
+        return (List<Cinema>) cinemaRepository.findAll();
+    }
     public List<String> getAllCinemaNames() {
         return cinemaRepository.findAllCinemaNames();
     }

@@ -2,11 +2,10 @@ package isi.cinema.service;
 
 import isi.cinema.DTO.MovieDTO;
 import isi.cinema.DTO.ScreeningScheduleDTO;
-import isi.cinema.model.Cinema;
-import isi.cinema.model.Movie;
-import isi.cinema.model.Ticket;
-import isi.cinema.model.User;
+import isi.cinema.model.*;
+import isi.cinema.repository.CinemaRepository;
 import isi.cinema.repository.MovieRepository;
+import isi.cinema.repository.ScreeningScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +16,41 @@ import java.util.stream.Collectors;
 @Service
 public class MovieService {
     private final MovieRepository movieRepository;
+    private final CinemaRepository cinemaRepository;
+    private final ScreeningScheduleRepository screeningScheduleRepository;
 
     @Autowired
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, CinemaRepository cinemaRepository, ScreeningScheduleRepository screeningScheduleRepository) {
         this.movieRepository = movieRepository;
+        this.cinemaRepository = cinemaRepository;
+        this.screeningScheduleRepository = screeningScheduleRepository;
     }
 
-    public Movie addMovie(Movie movie) {
+    public Movie addMovie(MovieDTO movieDTO) {
+        List<ScreeningSchedule> screeningSchedules = movieDTO.getScreeningScheduleIds().stream()
+                .map(screeningScheduleRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        List<Cinema> cinemas = movieDTO.getCinemaIds().stream()
+                .map(cinemaRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        Movie movie = new Movie(
+                movieDTO.getTitle(),
+                movieDTO.getAgeRating(),
+                movieDTO.getDescription(),
+                movieDTO.getLength(),
+                movieDTO.getCountryProduction(),
+                movieDTO.getYearProduction(),
+                movieDTO.getCategory(),
+                movieDTO.getType(),
+                screeningSchedules,
+                cinemas
+        );
         return movieRepository.save(movie);
     }
 

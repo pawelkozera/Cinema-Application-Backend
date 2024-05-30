@@ -27,4 +27,10 @@ public class CinemaController {
         List<String> cinemas = cinemaService.getAllCinemaNames();
         return ResponseEntity.ok(cinemas);
     }
+
+    @GetMapping("/getCinemas")
+    public ResponseEntity<List<Cinema>> getAllInfoCinemas() {
+        List<Cinema> cinemas = cinemaService.getAllCinemas();
+        return ResponseEntity.ok(cinemas);
+    }
 }

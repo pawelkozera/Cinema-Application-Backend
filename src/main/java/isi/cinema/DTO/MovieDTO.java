@@ -13,7 +13,26 @@ public class MovieDTO {
     private String countryProduction;
     private String yearProduction;
 
+    private List<Long> screeningScheduleIds;
+    private List<Long> cinemaIds;
+
     private List<ScreeningScheduleDTO> screeningDates;
+
+    public List<Long> getScreeningScheduleIds() {
+        return screeningScheduleIds;
+    }
+
+    public List<Long> getCinemaIds() {
+        return cinemaIds;
+    }
+
+    public void setScreeningScheduleIds(List<Long> screeningScheduleIds) {
+        this.screeningScheduleIds = screeningScheduleIds;
+    }
+
+    public void setCinemaIds(List<Long> cinemaIds) {
+        this.cinemaIds = cinemaIds;
+    }
 
     public Long getId() {
         return id;

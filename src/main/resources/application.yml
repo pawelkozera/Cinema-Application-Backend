@@ -16,5 +16,5 @@ spring:
 paypal:
   client:
     id:
-    secret:
+    secret: 
   mode: sandbox
