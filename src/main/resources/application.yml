@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: classpath:paypal.properties
   datasource:
     url: jdbc:postgresql://localhost:5432/cinemaDatabase
     username: cinema
@@ -15,6 +17,6 @@ spring:
 
 paypal:
   client:
-    id:
-    secret:
+    id: ${paypal.client.id}
+    secret: ${paypal.client.secret}
   mode: sandbox
