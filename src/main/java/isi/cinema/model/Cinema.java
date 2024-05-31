@@ -17,6 +17,9 @@ public class Cinema {
     @ManyToMany(mappedBy = "cinemas")
     private List<Movie> movies;
 
+    @OneToMany(mappedBy = "cinema")
+    private List<Room> rooms;
+
     protected Cinema() {}
 
     public Cinema(String name) {

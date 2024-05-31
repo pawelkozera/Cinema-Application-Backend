@@ -24,6 +24,10 @@ public class ScreeningSchedule {
     @OneToMany(mappedBy = "screeningSchedule", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
 
+    @ManyToOne
+    @JoinColumn(name="roomId")
+    private Room room;
+
     protected ScreeningSchedule() {}
 
     public ScreeningSchedule(Date date, String format) {

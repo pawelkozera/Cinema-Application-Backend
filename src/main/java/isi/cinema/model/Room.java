@@ -12,6 +12,13 @@ public class Room {
     private String name;
     private List<String> seats;
 
+    @ManyToOne
+    @JoinColumn(name="cinemaId")
+    private Cinema cinema;
+
+    @OneToMany(mappedBy = "room")
+    private List<ScreeningSchedule> screeningSchedules;
+
     protected Room() {}
 
     public Room(String name, List<String> seats) {
