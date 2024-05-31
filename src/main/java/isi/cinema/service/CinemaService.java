@@ -1,5 +1,6 @@
 package isi.cinema.service;
 
+import isi.cinema.DTO.CinemaDTO;
 import isi.cinema.model.Cinema;
 import isi.cinema.model.User;
 import isi.cinema.repository.CinemaRepository;
@@ -20,9 +21,13 @@ public class CinemaService {
         this.cinemaRepository = cinemaRepository;
     }
 
-    public List<Cinema> getAllCinemas() {
-        return (List<Cinema>) cinemaRepository.findAll();
+    public CinemaDTO getCinemaByName(String cinemaName) {
+        Cinema cinema = cinemaRepository.findCinemaByName(cinemaName);
+        CinemaDTO cinemaDTO = new CinemaDTO(cinema.getId(), cinema.getName());
+
+        return cinemaDTO;
     }
+
     public List<String> getAllCinemaNames() {
         return cinemaRepository.findAllCinemaNames();
     }

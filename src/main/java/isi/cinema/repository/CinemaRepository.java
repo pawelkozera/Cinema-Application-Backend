@@ -11,4 +11,7 @@ import java.util.List;
 public interface CinemaRepository extends CrudRepository<Cinema, Long> {
     @Query("SELECT c.name FROM Cinema c")
     List<String> findAllCinemaNames();
+
+    @Query("SELECT c FROM Cinema c WHERE c.name = :cinemaName")
+    Cinema findCinemaByName(String cinemaName);
 }

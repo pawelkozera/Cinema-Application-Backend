@@ -1,5 +1,6 @@
 package isi.cinema.controller;
 
+import isi.cinema.DTO.CinemaDTO;
 import isi.cinema.model.Cinema;
 import isi.cinema.model.User;
 import isi.cinema.service.CinemaService;
@@ -25,12 +26,14 @@ public class CinemaController {
     @GetMapping("/cinemas")
     public ResponseEntity<List<String>> getAllCinemas() {
         List<String> cinemas = cinemaService.getAllCinemaNames();
+
         return ResponseEntity.ok(cinemas);
     }
 
-    @GetMapping("/getCinemas")
-    public ResponseEntity<List<Cinema>> getAllInfoCinemas() {
-        List<Cinema> cinemas = cinemaService.getAllCinemas();
-        return ResponseEntity.ok(cinemas);
+    @GetMapping("/getCinemaByName/{movieName}")
+    public ResponseEntity<CinemaDTO> getAllInfoCinemas(@PathVariable String movieName) {
+        CinemaDTO cinema = cinemaService.getCinemaByName(movieName);
+
+        return ResponseEntity.ok(cinema);
     }
 }
