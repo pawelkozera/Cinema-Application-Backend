@@ -1,5 +1,6 @@
 package isi.cinema.controller;
 
+import isi.cinema.DTO.RoomDTO;
 import isi.cinema.model.Room;
 import isi.cinema.model.ScreeningSchedule;
 import isi.cinema.service.RoomService;
@@ -19,6 +20,12 @@ public class RoomController {
     @Autowired
     public RoomController(RoomService roomService) {
         this.roomService = roomService;
+    }
+
+    @GetMapping("/getAvailableSeats/{scheduleId}")
+    public ResponseEntity<RoomDTO> getAvailableSeats(@PathVariable Long scheduleId) {
+        RoomDTO roomDTO = roomService.getAvailableSeats(scheduleId);
+        return ResponseEntity.ok(roomDTO);
     }
 
     @PostMapping("/add")
