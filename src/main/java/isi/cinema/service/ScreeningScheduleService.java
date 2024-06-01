@@ -51,4 +51,10 @@ public class ScreeningScheduleService {
                 .map(schedule -> new ScreeningScheduleDTO(schedule.getId(), schedule.getDate(), schedule.getFormat()))
                 .collect(Collectors.toList());
     }
+
+    public ScreeningScheduleDTO getTakenSeats(Long screeningScheduleId) {
+        Optional<ScreeningSchedule> screeningSchedule = screeningScheduleRepository.findById(screeningScheduleId);
+
+        return screeningSchedule.map(schedule -> new ScreeningScheduleDTO(schedule.getTakenSeats())).orElse(null);
+    }
 }

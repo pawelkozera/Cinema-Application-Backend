@@ -80,4 +80,10 @@ public class ScreeningScheduleController {
         List<ScreeningScheduleDTO> screeningSchedulesDTO = screeningScheduleService.getAllScreeningSchedules();
         return ResponseEntity.ok(screeningSchedulesDTO);
     }
+
+    @GetMapping("/getTakenSeats/{scheduleId}")
+    public ResponseEntity<ScreeningScheduleDTO> getTakenSeats(@PathVariable Long scheduleId) {
+        ScreeningScheduleDTO screeningSchedulesDTO = screeningScheduleService.getTakenSeats(scheduleId);
+        return ResponseEntity.ok(screeningSchedulesDTO);
+    }
 }

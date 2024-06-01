@@ -1,11 +1,24 @@
 package isi.cinema.DTO;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
+import java.util.List;
 
 public class ScreeningScheduleDTO {
+    @Getter
+    @Setter
     private Long id;
+    @Getter
+    @Setter
     private Date date;
+    @Getter
+    @Setter
     private String format;
+    @Getter
+    @Setter
+    private List<String> takenSeats;
 
     public ScreeningScheduleDTO() {
     }
@@ -16,27 +29,7 @@ public class ScreeningScheduleDTO {
         this.format = format;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
+    public ScreeningScheduleDTO(List<String> takenSeats) {
+        this.takenSeats = takenSeats;
     }
 }
