@@ -77,21 +77,29 @@ public class MovieService {
     }
 
 
-    public Movie updateMovie(Long id, Movie updatedMovie) {
+    public Movie updateMovie(Long id, MovieDTO updatedMovie) {
         Optional<Movie> movieOptional = movieRepository.findById(id);
-        if(movieOptional.isPresent()) {
+        if (movieOptional.isPresent()) {
             Movie movie = movieOptional.get();
             movie.setTitle(updatedMovie.getTitle());
-            movie.setScreeningSchedules(updatedMovie.getScreeningSchedules());
             movie.setAgeRating(updatedMovie.getAgeRating());
             movie.setDescription(updatedMovie.getDescription());
             movie.setLength(updatedMovie.getLength());
             movie.setCountryProduction(updatedMovie.getCountryProduction());
             movie.setYearProduction(updatedMovie.getYearProduction());
+            movie.setCategory(updatedMovie.getCategory());
+            movie.setType(updatedMovie.getType());
+
+            List<ScreeningSchedule> screeningSchedules = updatedMovie.getScreeningScheduleIds().stream()
+                    .map(screeningScheduleRepository::findById)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toList());
+            movie.setScreeningSchedules(screeningSchedules);
 
             return movieRepository.save(movie);
         }
-        return  null;
+        return null;
     }
 
     public List<MovieDTO> findAllMoviesWithScreeningSchedulesByCinemaName(String cinemaName) {
@@ -103,6 +111,11 @@ public class MovieService {
             movieDTO.setTitle(movie.getTitle());
             movieDTO.setCategory(movie.getCategory());
             movieDTO.setType(movie.getType());
+            movieDTO.setAgeRating(movie.getAgeRating());
+            movieDTO.setDescription(movie.getDescription());
+            movieDTO.setLength(movie.getLength());
+            movieDTO.setCountryProduction(movie.getCountryProduction());
+            movieDTO.setYearProduction(movie.getYearProduction());
 
             List<ScreeningScheduleDTO> screeningDates = movie.getScreeningSchedules().stream()
                     .map(screeningSchedule -> {

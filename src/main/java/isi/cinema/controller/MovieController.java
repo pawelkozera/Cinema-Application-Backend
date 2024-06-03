@@ -62,7 +62,7 @@ public class MovieController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movie, Authentication authentication) {
+    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody MovieDTO movie, Authentication authentication) {
         UserAuthentication userAuthentication = new UserAuthentication();
         ResponseEntity<Movie> authorizationResponse = (ResponseEntity<Movie>) userAuthentication.checkAdminAuthorization(authentication);
         if (authorizationResponse != null) {
