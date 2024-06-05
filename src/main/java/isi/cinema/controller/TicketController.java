@@ -1,5 +1,7 @@
 package isi.cinema.controller;
 
+import isi.cinema.DTO.UserMovieHistoryDTO;
+import isi.cinema.model.Movie;
 import isi.cinema.model.Ticket;
 import isi.cinema.DTO.TicketDTO;
 import isi.cinema.service.ScreeningScheduleService;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -50,5 +53,18 @@ public class TicketController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/ticket/history")
+    public ResponseEntity<List<UserMovieHistoryDTO>> getTicketsHistory(Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        if (!userAuthentication.checkAuthentication(authentication)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = authentication.getName();
+        List<UserMovieHistoryDTO> userMovieHistoryDTO = ticketService.getTicketsHistory(username);
+
+        return ResponseEntity.ok(userMovieHistoryDTO);
     }
 }
