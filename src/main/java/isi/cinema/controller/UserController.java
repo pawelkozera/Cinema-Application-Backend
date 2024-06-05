@@ -1,6 +1,7 @@
 package isi.cinema.controller;
 
 import isi.cinema.model.Role;
+import isi.cinema.model.Room;
 import isi.cinema.model.User;
 import isi.cinema.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -83,6 +86,21 @@ public class UserController {
         User updatedUser = userService.updateUser(id, user);
         if(updatedUser != null) {
             return ResponseEntity.ok(updatedUser);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/getEmail")
+    public ResponseEntity<String> getEmail(Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        if (!userAuthentication.checkAuthentication(authentication)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String email = userService.getEmail(authentication.getName());
+        
+        if(email != null) {
+            return ResponseEntity.ok(email);
         }
         return ResponseEntity.notFound().build();
     }
