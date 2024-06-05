@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/room")
@@ -66,5 +68,21 @@ public class RoomController {
             return ResponseEntity.ok(updatedRoom);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/byCinemaName/{cinemaName}")
+    public ResponseEntity<List<Room>> getRoomsByCinemaName(@PathVariable String cinemaName, Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        ResponseEntity<List<Room>> authorizationResponse = (ResponseEntity<List<Room>>) userAuthentication.checkAdminAuthorization(authentication);
+        if (authorizationResponse != null) {
+            return authorizationResponse;
+        }
+
+        List<Room> rooms = roomService.getRoomsByCinemaName(cinemaName);
+        if (rooms.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(rooms);
     }
 }

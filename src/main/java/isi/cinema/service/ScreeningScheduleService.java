@@ -3,8 +3,10 @@ package isi.cinema.service;
 import isi.cinema.DTO.MovieDTO;
 import isi.cinema.DTO.ScreeningScheduleDTO;
 import isi.cinema.model.Movie;
+import isi.cinema.model.Room;
 import isi.cinema.model.ScreeningSchedule;
 import isi.cinema.repository.MovieRepository;
+import isi.cinema.repository.RoomRepository;
 import isi.cinema.repository.ScreeningScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,19 @@ import java.util.stream.StreamSupport;
 @Service
 public class ScreeningScheduleService {
     private final ScreeningScheduleRepository screeningScheduleRepository;
+    private final RoomRepository roomRepository;
 
     @Autowired
-    public ScreeningScheduleService(ScreeningScheduleRepository screeningScheduleRepository) {
+    public ScreeningScheduleService(ScreeningScheduleRepository screeningScheduleRepository, RoomRepository roomRepository) {
         this.screeningScheduleRepository = screeningScheduleRepository;
+        this.roomRepository = roomRepository;
     }
 
-    public ScreeningSchedule addScreeningSchedule(ScreeningSchedule screeningSchedule) {
+    public ScreeningSchedule addScreeningSchedule(ScreeningSchedule screeningSchedule, Long roomId) {
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
+
+        screeningSchedule.setRoom(room);
+
         return screeningScheduleRepository.save(screeningSchedule);
     }
 
