@@ -5,6 +5,7 @@ import isi.cinema.model.Ticket;
 import isi.cinema.model.User;
 import isi.cinema.repository.CinemaRepository;
 import isi.cinema.repository.TicketRepository;
+import isi.cinema.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,24 @@ import java.util.UUID;
 @Service
 public class TicketService {
     private final TicketRepository ticketRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
+        this.userRepository = userRepository;
     }
 
-    public Ticket bookTicket(Ticket ticket) {
+    public Ticket bookTicket(Ticket ticket, String username) {
+        if (username != null) {
+            Optional<User> userOptional = userRepository.findByUsername(username);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                user.setUsername(username);
+                ticket.setUser(user);
+            }
+        }
+
         return ticketRepository.save(ticket);
     }
 

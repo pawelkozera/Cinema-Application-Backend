@@ -2,10 +2,12 @@ package isi.cinema.controller;
 
 import isi.cinema.model.Ticket;
 import isi.cinema.DTO.TicketDTO;
+import isi.cinema.service.ScreeningScheduleService;
 import isi.cinema.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -15,15 +17,27 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class TicketController {
     private final TicketService ticketService;
+    private final ScreeningScheduleService screeningScheduleService;
 
     @Autowired
-    public TicketController(TicketService ticketService) {
+    public TicketController(TicketService ticketService, ScreeningScheduleService screeningScheduleService) {
+        this.screeningScheduleService = screeningScheduleService;
         this.ticketService = ticketService;
     }
 
     @PostMapping("/ticket/book")
-    public ResponseEntity<Ticket> bookTicket(@RequestBody Ticket ticket) {
-        Ticket bookedTicket = ticketService.bookTicket(ticket);
+    public ResponseEntity<Ticket> bookTicket(@RequestBody Ticket ticket, Authentication authentication) {
+        Ticket bookedTicket;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            bookedTicket = ticketService.bookTicket(ticket, username);
+        } else {
+            bookedTicket = ticketService.bookTicket(ticket, null);
+        }
+
+        long screeningScheduleId = bookedTicket.getScreeningSchedule().getId();
+        screeningScheduleService.addTakenSeats(bookedTicket.getSeats(), screeningScheduleId);
 
         return new ResponseEntity<>(bookedTicket, HttpStatus.CREATED);
     }

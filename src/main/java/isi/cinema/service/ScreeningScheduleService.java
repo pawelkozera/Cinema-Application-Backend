@@ -65,4 +65,20 @@ public class ScreeningScheduleService {
 
         return screeningSchedule.map(schedule -> new ScreeningScheduleDTO(schedule.getTakenSeats())).orElse(null);
     }
+
+    public void addTakenSeats(List<String> takenSeats, long screeningScheduleId) {
+        Optional<ScreeningSchedule> screeningScheduleOptional = screeningScheduleRepository.findById(screeningScheduleId);
+        if(screeningScheduleOptional.isPresent()) {
+            ScreeningSchedule screeningSchedule = screeningScheduleOptional.get();
+            List<String> oldTakenSeats = new ArrayList<>(List.of());
+
+            if (screeningSchedule.getTakenSeats() != null) {
+                oldTakenSeats.addAll(screeningSchedule.getTakenSeats());
+            }
+
+            oldTakenSeats.addAll(takenSeats);
+            screeningSchedule.setTakenSeats(oldTakenSeats);
+            screeningScheduleRepository.save(screeningSchedule);
+        }
+    }
 }
