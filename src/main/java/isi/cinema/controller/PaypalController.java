@@ -24,7 +24,7 @@ public class PaypalController {
     }
 
     public static final String SUCCESS_URL = "/pay/success";
-    public static final String CANCEL_URL = "/pay/cancel";
+    public static final String CANCEL_URL = "/movies";
 
     @PostMapping("/pay")
     public String payment(@RequestBody Order order, @RequestParam("cinemaName") String cinemaName) {
@@ -50,13 +50,17 @@ public class PaypalController {
     public String executePayment(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
         try {
             Payment payment = service.executePayment(paymentId, payerId);
+
             if (payment.getState().equals("approved")) {
                 orderService.createOrderFromPayment(paymentId, payerId);
                 return "completed";
+            } else {
+                return "failed";
             }
         } catch (PayPalRESTException e) {
             e.printStackTrace();
+            return "failed";
         }
-        return "failed";
     }
+
 }
