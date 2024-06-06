@@ -2,13 +2,12 @@ spring:
   config:
     import: classpath:paypal.properties
   datasource:
-    url: jdbc:postgresql://localhost:5432/cinemadatabase
-    username: postgres
-    password: adminna131zp
+    url: jdbc:postgresql://localhost:5432/cinemaDatabase
+    username: cinema
+    password: cinema
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
       show-sql: true
       properties:
         hibernate:
