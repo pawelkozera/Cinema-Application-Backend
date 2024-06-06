@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
@@ -42,5 +43,25 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .jwtToken(jwtToken)
                 .build();
+    }
+
+    public String authenticateWithGoogle(OAuth2User oauth2User) {
+
+        var user = userRepository.findByEmail(oauth2User.getAttribute("email"))
+                .orElse(null);
+
+        if(user==null)
+        {
+            user= User.builder()
+                    .username(oauth2User.getAttribute("name"))
+                    .email(oauth2User.getAttribute("email"))
+                    .password("*")
+                    .role(Role.USER)
+                    .build();
+            userRepository.save(user);
+        }
+        userRepository.save(user);
+
+        return jwtService.generateJwtToken(user);
     }
 }
