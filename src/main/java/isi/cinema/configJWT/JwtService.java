@@ -28,7 +28,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)))
+                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(15)))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -37,6 +37,7 @@ public class JwtService {
     {
         return generateJwtToken(new HashMap<>(),userDetails);
     }
+
     public String extractUsername(String jwtToken) {
         return extractClaim(jwtToken,Claims::getSubject);
     }
@@ -66,6 +67,7 @@ public class JwtService {
         return Jwts
                 .parser()
                 .setSigningKey(getSignInKey())
+                .setAllowedClockSkewSeconds(5)
                 .build()
                 .parseClaimsJws(jwtToken)
                 .getBody();

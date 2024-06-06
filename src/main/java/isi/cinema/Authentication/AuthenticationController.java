@@ -1,11 +1,8 @@
 package isi.cinema.Authentication;
 
-import isi.cinema.model.User;
+import isi.cinema.refreshToken.TokenRefreshRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +23,13 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<AuthenticationResponse> refreshAccessToken(@RequestBody TokenRefreshRequest tokenRefreshRequest) {
+        return ResponseEntity.ok(authenticationService.refreshToken(tokenRefreshRequest));
+    }
 }
+
 
 
