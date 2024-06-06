@@ -40,7 +40,6 @@ public class PaypalController {
             }
 
         } catch (PayPalRESTException e) {
-
             e.printStackTrace();
         }
         return "";

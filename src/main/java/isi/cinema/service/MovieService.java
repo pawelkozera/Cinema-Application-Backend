@@ -55,7 +55,7 @@ public class MovieService {
         return movieRepository.save(movie);
     }
 
-    public void deleteMovieById(Long id) {
+    public String deleteMovieById(Long id) {
         Movie movieToDelete = movieRepository.findById(id).orElse(null);
 
         if (movieToDelete != null) {
@@ -65,7 +65,7 @@ public class MovieService {
 
             for (Ticket ticket : movieToDelete.getTickets()) {
                 if (ticket.getMovie() != null) {
-                    return;
+                    return "Cannot delete movie with tickets";
                 }
             }
 
@@ -75,6 +75,8 @@ public class MovieService {
 
             movieRepository.delete(movieToDelete);
         }
+
+        return "Movie deleted successfully";
     }
 
 

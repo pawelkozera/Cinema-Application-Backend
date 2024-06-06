@@ -50,14 +50,18 @@ public class MovieController {
     }
 
     @RequestMapping(value="/delete/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
-    public ResponseEntity<Movie> deleteMovie(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<String> deleteMovie(@PathVariable Long id, Authentication authentication) {
         UserAuthentication userAuthentication = new UserAuthentication();
-        ResponseEntity<Movie> authorizationResponse = (ResponseEntity<Movie>) userAuthentication.checkAdminAuthorization(authentication);
+        ResponseEntity<String> authorizationResponse = (ResponseEntity<String>) userAuthentication.checkAdminAuthorization(authentication);
         if (authorizationResponse != null) {
             return authorizationResponse;
         }
 
-        movieService.deleteMovieById(id);
+        String response = movieService.deleteMovieById(id);
+        if ("Cannot delete movie with tickets".equals(response)) {
+            return new ResponseEntity<>("Cannot delete movie with tickets", HttpStatus.BAD_REQUEST);
+        }
+
         return ResponseEntity.noContent().build();
     }
 
