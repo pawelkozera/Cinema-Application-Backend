@@ -1,6 +1,8 @@
 package isi.cinema.controller;
 
 import isi.cinema.model.Order;
+import isi.cinema.repository.OrderRepository;
+import isi.cinema.service.OrderService;
 import isi.cinema.service.PaypalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +14,14 @@ import com.paypal.base.rest.PayPalRESTException;
 @CrossOrigin
 @RequestMapping("/api/payment")
 public class PaypalController {
+    private final PaypalService service;
+    private final OrderService orderService;
 
     @Autowired
-    PaypalService service;
+    public PaypalController(PaypalService service, OrderService orderService) {
+        this.orderService = orderService;
+        this.service = service;
+    }
 
     public static final String SUCCESS_URL = "/pay/success";
     public static final String CANCEL_URL = "/pay/cancel";
@@ -44,7 +51,7 @@ public class PaypalController {
         try {
             Payment payment = service.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-                service.createOrderFromPayment(paymentId, payerId);
+                orderService.createOrderFromPayment(paymentId, payerId);
                 return "completed";
             }
         } catch (PayPalRESTException e) {

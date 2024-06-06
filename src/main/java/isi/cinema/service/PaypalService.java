@@ -74,23 +74,4 @@ public class PaypalService {
 
         return payment.execute(apiContext, paymentExecute);
     }
-
-    public void createOrderFromPayment(String paymentId, String payerId) throws PayPalRESTException {
-        Payment payment = executePayment(paymentId, payerId);
-
-        Transaction transaction = payment.getTransactions().get(0);
-        Amount amount = transaction.getAmount();
-        String currency = amount.getCurrency();
-        Double price = Double.valueOf(amount.getTotal());
-        String method = payment.getPayer().getPaymentMethod();
-        String intent = payment.getIntent();
-        String description = transaction.getDescription();
-
-        createOrder(price, currency, method, intent, description, paymentId, payerId);
-    }
-
-    private void createOrder(Double price, String currency, String method, String intent, String description, String paymentId, String payerId) {
-        Order order = new Order(price, currency, method, intent, description, true, paymentId, payerId);
-        orderRepository.save(order);
-    }
 }
