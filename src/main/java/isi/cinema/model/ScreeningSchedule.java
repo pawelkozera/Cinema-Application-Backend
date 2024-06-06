@@ -12,40 +12,26 @@ import java.util.List;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
+@Getter
+@Setter
 public class ScreeningSchedule {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Getter
-    @Setter
     private Long id;
 
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-    @Getter
-    @Setter
     private Date date;
-
-    @Getter
-    @Setter
     private String format;
-
-    @Getter
-    @Setter
     private List<String> takenSeats;
 
     @ManyToMany(mappedBy = "screeningSchedules", fetch = FetchType.LAZY)
-    @Getter
-    @Setter
     private List<Movie> movies;
 
     @OneToMany(mappedBy = "screeningSchedule", fetch = FetchType.LAZY)
-    @Getter
-    @Setter
     private List<Ticket> tickets;
 
     @ManyToOne
     @JoinColumn(name="roomId")
-    @Getter
-    @Setter
     private Room room;
 
     protected ScreeningSchedule() {}

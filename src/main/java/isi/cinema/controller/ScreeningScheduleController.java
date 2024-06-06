@@ -26,15 +26,16 @@ public class ScreeningScheduleController {
         this.screeningScheduleService = screeningScheduleService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<ScreeningSchedule> addScreeningSchedule(@RequestBody ScreeningSchedule screeningSchedule, Authentication authentication) {
+    @PostMapping("/add/{roomId}")
+    public ResponseEntity<ScreeningSchedule> addScreeningSchedule(@PathVariable Long roomId, @RequestBody ScreeningSchedule screeningScheduleRequest, Authentication authentication) {
         UserAuthentication userAuthentication = new UserAuthentication();
         ResponseEntity<ScreeningSchedule> authorizationResponse = (ResponseEntity<ScreeningSchedule>) userAuthentication.checkAdminAuthorization(authentication);
         if (authorizationResponse != null) {
             return authorizationResponse;
         }
 
-        ScreeningSchedule addedScreeningSchedule = screeningScheduleService.addScreeningSchedule(screeningSchedule);
+        ScreeningSchedule screeningSchedule = new ScreeningSchedule(screeningScheduleRequest.getDate(), screeningScheduleRequest.getFormat());
+        ScreeningSchedule addedScreeningSchedule = screeningScheduleService.addScreeningSchedule(screeningSchedule, roomId);
 
         return new ResponseEntity<>(addedScreeningSchedule, HttpStatus.CREATED);
     }

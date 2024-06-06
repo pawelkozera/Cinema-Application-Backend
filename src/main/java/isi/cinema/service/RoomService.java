@@ -9,6 +9,7 @@ import isi.cinema.repository.ScreeningScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,5 +45,9 @@ public class RoomService {
         Optional<Room> room = roomRepository.findById(scheduleId);
 
         return room.map(room1 -> new RoomDTO(room1.getSeats())).orElse(null);
+    }
+
+    public List<Room> getRoomsByCinemaName(String cinemaName) {
+        return roomRepository.findByCinemaName(cinemaName);
     }
 }

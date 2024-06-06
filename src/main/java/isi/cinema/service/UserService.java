@@ -1,5 +1,6 @@
 package isi.cinema.service;
 
+import isi.cinema.DTO.PasswordDTO;
 import isi.cinema.model.User;
 import isi.cinema.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,27 +39,27 @@ public class UserService {
         return null;
     }
 
-    public User getUserById(Long id) {
-        Optional<User> user = userRepository.findById(id);
+    public String updateUser(PasswordDTO passwordDTO, String userName) {
+        Optional<User> userOptional = userRepository.findByUsername(userName);
 
-        return user.orElse(null);
-    }
-
-    public Iterable<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
-    }
-
-    public User updateUser(Long id, User updatedCustomer) {
-        Optional<User> userOptional = userRepository.findById(id);
         if(userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setUsername(updatedCustomer.getUsername());
-            return userRepository.save(user);
+            if (encoder.matches(passwordDTO.getOldPassword(), user.getPassword())) {
+                String encodedPassword = encoder.encode(passwordDTO.getNewPassword());
+                user.setPassword(encodedPassword);
+                userRepository.save(user);
+
+                return "Successfully changed password";
+            }
+            else {
+                return "Wrong old password";
+            }
         }
         return  null;
+    }
+
+    public String getEmail(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.map(User::getEmail).orElse(null);
     }
 }

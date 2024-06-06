@@ -1,6 +1,8 @@
 package isi.cinema.controller;
 
+import isi.cinema.DTO.PasswordDTO;
 import isi.cinema.model.Role;
+import isi.cinema.model.Room;
 import isi.cinema.model.User;
 import isi.cinema.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -56,33 +60,35 @@ public class UserController {
         return ResponseEntity.ok("Authorized access");
     }
 
-    @RequestMapping(value="/delete/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/users")
-    public ResponseEntity<Iterable<User>> getAllUsers() {
-        Iterable<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
-
-    @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        if(user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
+    @PutMapping("/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody PasswordDTO passwordDTO, Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        if (!userAuthentication.checkAuthentication(authentication)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        String message = userService.updateUser(passwordDTO, authentication.getName());
+        if(message != null) {
+            if (message.equals("Successfully changed password")) {
+                return ResponseEntity.ok("Successfully changed password");
+            } else if (message.equals("Wrong old password")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong old password");
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        User updatedUser = userService.updateUser(id, user);
-        if(updatedUser != null) {
-            return ResponseEntity.ok(updatedUser);
+    @GetMapping("/getEmail")
+    public ResponseEntity<String> getEmail(Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        if (!userAuthentication.checkAuthentication(authentication)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String email = userService.getEmail(authentication.getName());
+
+        if(email != null) {
+            return ResponseEntity.ok(email);
         }
         return ResponseEntity.notFound().build();
     }

@@ -3,12 +3,16 @@ package isi.cinema.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
+@Getter
+@Setter
 public class Ticket {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -39,63 +43,6 @@ public class Ticket {
         this.user = user;
         this.movie = movie;
         this.screeningSchedule = screeningSchedule;
-    }
-
-    public ScreeningSchedule getScreeningSchedule() {
-        return screeningSchedule;
-    }
-
-    public void setScreeningSchedule(ScreeningSchedule screeningSchedule) {
-        this.screeningSchedule = screeningSchedule;
-    }
-
-
-    public String getPrice() {
-        return price;
-    }
-
-    public List<String> getSeats() {
-        return seats;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public void setSeats(List<String> seats) {
-        this.seats = seats;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
     }
 
     @Override

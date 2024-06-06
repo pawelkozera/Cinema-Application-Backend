@@ -48,13 +48,14 @@ public class MovieService {
                 movieDTO.getYearProduction(),
                 movieDTO.getCategory(),
                 movieDTO.getType(),
+                movieDTO.getImageUrl(),
                 screeningSchedules,
                 cinemas
         );
         return movieRepository.save(movie);
     }
 
-    public void deleteMovieById(Long id) {
+    public String deleteMovieById(Long id) {
         Movie movieToDelete = movieRepository.findById(id).orElse(null);
 
         if (movieToDelete != null) {
@@ -64,7 +65,7 @@ public class MovieService {
 
             for (Ticket ticket : movieToDelete.getTickets()) {
                 if (ticket.getMovie() != null) {
-                    return;
+                    return "Cannot delete movie with tickets";
                 }
             }
 
@@ -74,6 +75,8 @@ public class MovieService {
 
             movieRepository.delete(movieToDelete);
         }
+
+        return "Movie deleted successfully";
     }
 
 
@@ -89,6 +92,7 @@ public class MovieService {
             movie.setYearProduction(updatedMovie.getYearProduction());
             movie.setCategory(updatedMovie.getCategory());
             movie.setType(updatedMovie.getType());
+            movie.setImageUrl(updatedMovie.getImageUrl());
 
             List<ScreeningSchedule> screeningSchedules = updatedMovie.getScreeningScheduleIds().stream()
                     .map(screeningScheduleRepository::findById)
@@ -111,6 +115,7 @@ public class MovieService {
             movieDTO.setTitle(movie.getTitle());
             movieDTO.setCategory(movie.getCategory());
             movieDTO.setType(movie.getType());
+            movieDTO.setImageUrl(movie.getImageUrl());
             movieDTO.setAgeRating(movie.getAgeRating());
             movieDTO.setDescription(movie.getDescription());
             movieDTO.setLength(movie.getLength());
@@ -147,6 +152,7 @@ public class MovieService {
         movieDTO.setTitle(movie.getTitle());
         movieDTO.setCategory(movie.getCategory());
         movieDTO.setType(movie.getType());
+        movieDTO.setImageUrl(movie.getImageUrl());
         movieDTO.setAgeRating(movie.getAgeRating());
         movieDTO.setDescription(movie.getDescription());
         movieDTO.setLength(movie.getLength());

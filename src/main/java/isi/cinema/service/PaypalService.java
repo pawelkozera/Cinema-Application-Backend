@@ -5,6 +5,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import isi.cinema.model.Order;
+import isi.cinema.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,14 @@ import com.paypal.base.rest.PayPalRESTException;
 
 @Service
 public class PaypalService {
+    private final OrderRepository orderRepository;
+    private APIContext apiContext;
 
     @Autowired
-    private APIContext apiContext;
+    public PaypalService(OrderRepository orderRepository, APIContext apiContext) {
+        this.orderRepository = orderRepository;
+        this.apiContext = apiContext;
+    }
 
     public Payment createPayment(
             Double total,
@@ -63,6 +70,7 @@ public class PaypalService {
         payment.setId(paymentId);
         PaymentExecution paymentExecute = new PaymentExecution();
         paymentExecute.setPayerId(payerId);
+
         return payment.execute(apiContext, paymentExecute);
     }
 }
