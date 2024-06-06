@@ -3,11 +3,13 @@ package isi.cinema.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
+@Getter
 public class Cinema {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -24,17 +26,5 @@ public class Cinema {
 
     public Cinema(String name) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<Movie> getMovies() {
-        return movies;
     }
 }

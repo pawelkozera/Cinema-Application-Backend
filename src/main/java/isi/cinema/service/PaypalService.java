@@ -5,6 +5,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import isi.cinema.model.Order;
+import isi.cinema.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,14 @@ import com.paypal.base.rest.PayPalRESTException;
 
 @Service
 public class PaypalService {
+    private final OrderRepository orderRepository;
+    private APIContext apiContext;
 
     @Autowired
-    private APIContext apiContext;
+    public PaypalService(OrderRepository orderRepository, APIContext apiContext) {
+        this.orderRepository = orderRepository;
+        this.apiContext = apiContext;
+    }
 
     public Payment createPayment(
             Double total,
@@ -61,8 +68,29 @@ public class PaypalService {
     public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException{
         Payment payment = new Payment();
         payment.setId(paymentId);
+        System.out.println(payment.getId());
         PaymentExecution paymentExecute = new PaymentExecution();
         paymentExecute.setPayerId(payerId);
+
         return payment.execute(apiContext, paymentExecute);
+    }
+
+    public void createOrderFromPayment(String paymentId, String payerId) throws PayPalRESTException {
+        Payment payment = executePayment(paymentId, payerId);
+
+        Transaction transaction = payment.getTransactions().get(0);
+        Amount amount = transaction.getAmount();
+        String currency = amount.getCurrency();
+        Double price = Double.valueOf(amount.getTotal());
+        String method = payment.getPayer().getPaymentMethod();
+        String intent = payment.getIntent();
+        String description = transaction.getDescription();
+
+        createOrder(price, currency, method, intent, description, paymentId, payerId);
+    }
+
+    private void createOrder(Double price, String currency, String method, String intent, String description, String paymentId, String payerId) {
+        Order order = new Order(price, currency, method, intent, description, true, paymentId, payerId);
+        orderRepository.save(order);
     }
 }

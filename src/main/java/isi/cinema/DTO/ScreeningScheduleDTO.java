@@ -6,18 +6,12 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
+@Getter
+@Setter
 public class ScreeningScheduleDTO {
-    @Getter
-    @Setter
     private Long id;
-    @Getter
-    @Setter
     private Date date;
-    @Getter
-    @Setter
     private String format;
-    @Getter
-    @Setter
     private List<String> takenSeats;
 
     public ScreeningScheduleDTO() {
