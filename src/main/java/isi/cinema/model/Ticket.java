@@ -34,6 +34,9 @@ public class Ticket {
     @JoinColumn(name="scheduleId")
     private ScreeningSchedule screeningSchedule;
 
+    @OneToOne(mappedBy = "ticket")
+    private Order order;
+
     protected Ticket() {}
 
     public Ticket(String price, List<String> seats, int amount, User user, Movie movie, ScreeningSchedule screeningSchedule) {

@@ -22,11 +22,15 @@ public class Order {
     private String description;
     private boolean isPaid;
 
+    @OneToOne
+    @JoinColumn(name="ticketId")
+    private Ticket ticket;
+
     public Order() {
 
     }
 
-    public Order(double price, String currency, String method, String intent, String description, boolean isPaid, String paymentId, String payerId) {
+    public Order(double price, String currency, String method, String intent, String description, boolean isPaid, String paymentId, String payerId, Ticket ticket) {
         this.price = price;
         this.currency = currency;
         this.method = method;
@@ -35,5 +39,6 @@ public class Order {
         this.isPaid = isPaid;
         this.paymentId = paymentId;
         this.payerId = payerId;
+        this.ticket = ticket;
     }
 }

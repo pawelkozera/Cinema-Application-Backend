@@ -39,9 +39,6 @@ public class TicketController {
             bookedTicket = ticketService.bookTicket(ticket, null);
         }
 
-        long screeningScheduleId = bookedTicket.getScreeningSchedule().getId();
-        screeningScheduleService.addTakenSeats(bookedTicket.getSeats(), screeningScheduleId);
-
         return new ResponseEntity<>(bookedTicket, HttpStatus.CREATED);
     }
 
