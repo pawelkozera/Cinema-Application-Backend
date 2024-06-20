@@ -56,7 +56,7 @@ public class PaypalController {
                     Ticket ticket = null;
                     if (authentication != null && authentication.isAuthenticated()) {
                         String username = authentication.getName();
-                        ticket = ticketService.bookTicket(ticket, username);
+                        ticket = ticketService.bookTicket(order.getTicket(), username);
                     } else {
                         ticket = ticketService.bookTicket(order.getTicket(), null);
                     }
