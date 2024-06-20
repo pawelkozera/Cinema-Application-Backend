@@ -6,8 +6,10 @@ import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.PayPalRESTException;
 import isi.cinema.DTO.CinemaDTO;
 import isi.cinema.DTO.OrderDTO;
+import isi.cinema.DTO.PasswordDTO;
 import isi.cinema.model.Cinema;
 import isi.cinema.model.Order;
+import isi.cinema.model.User;
 import isi.cinema.repository.CinemaRepository;
 import isi.cinema.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,22 +70,34 @@ public class OrderService {
         return null;
     }
 
-    public void createOrderFromPayment(String paymentId, String payerId) throws PayPalRESTException {
-        Payment payment = paypalService.executePayment(paymentId, payerId);
-
-        Transaction transaction = payment.getTransactions().get(0);
-        Amount amount = transaction.getAmount();
-        String currency = amount.getCurrency();
-        Double price = Double.valueOf(amount.getTotal());
-        String method = payment.getPayer().getPaymentMethod();
-        String intent = payment.getIntent();
-        String description = transaction.getDescription();
+    public void createOrderFromPayment(String paymentId, Order order) throws PayPalRESTException {
+        String currency = order.getCurrency();
+        String payerId = order.getPayerId();
+        Double price = Double.valueOf(order.getPrice());
+        String method = order.getMethod();
+        String intent = order.getIntent();
+        String description = order.getDescription();
 
         createOrder(price, currency, method, intent, description, paymentId, payerId);
     }
 
+    public String updateOrder(String paymentId, String payerId) {
+        Optional<Order> orderOptional = orderRepository.findByPaymentId(paymentId);
+
+        if(orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            order.setPayerId(payerId);
+            order.setPaid(true);
+            orderRepository.save(order);
+
+            return "Order updated successfully";
+        }
+
+        return  null;
+    }
+
     private void createOrder(Double price, String currency, String method, String intent, String description, String paymentId, String payerId) {
-        Order order = new Order(price, currency, method, intent, description, true, paymentId, payerId);
+        Order order = new Order(price, currency, method, intent, description, false, paymentId, payerId);
         orderRepository.save(order);
     }
 }

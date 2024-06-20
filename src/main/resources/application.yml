@@ -1,6 +1,6 @@
 spring:
   config:
-    import: classpath:paypal.properties
+    import: classpath:paypal.properties, classpath:google.properties
   datasource:
     url: jdbc:postgresql://localhost:5432/cinemaDatabase
     username: cinema
@@ -14,6 +14,20 @@ spring:
           format_sql: true
       database: postgresql
       database-platform: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${google.client.id}
+            client-secret: ${google.client.secret}
+            scope: profile, email
+            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
 paypal:
   client:

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.paypal.api.payments.PaymentHistory;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
 import com.paypal.base.rest.PayPalRESTException;
@@ -26,6 +25,7 @@ public class PaypalConfig {
     public Map<String, String> paypalSdkConfig() {
         Map<String, String> configMap = new HashMap<>();
         configMap.put("mode", mode);
+
         return configMap;
     }
 
@@ -36,7 +36,8 @@ public class PaypalConfig {
 
     @Bean
     public APIContext apiContext() throws PayPalRESTException {
-        APIContext context = new APIContext(oAuthTokenCredential().getAccessToken());
+        String accessToken = oAuthTokenCredential().getAccessToken();
+        APIContext context = new APIContext(accessToken);
         context.setConfigurationMap(paypalSdkConfig());
         return context;
     }

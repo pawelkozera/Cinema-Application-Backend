@@ -34,3 +34,6 @@ build/
 
 ### Paypal properties ###
 paypal.properties
+
+### Paypal properties ###
+google.properties
