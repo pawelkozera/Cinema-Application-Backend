@@ -17,4 +17,6 @@ public class TicketDTO {
     private String movieTitle;
     private Date screeningDate;
     private String screeningFormat;
+    private boolean isPaid;
+    private String imageUrl;
 }

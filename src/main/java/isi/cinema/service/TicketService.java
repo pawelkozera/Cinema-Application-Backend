@@ -2,6 +2,8 @@ package isi.cinema.service;
 
 import isi.cinema.DTO.TicketDTO;
 import isi.cinema.DTO.UserMovieHistoryDTO;
+import isi.cinema.model.Movie;
+import isi.cinema.model.Order;
 import isi.cinema.model.Ticket;
 import isi.cinema.model.User;
 import isi.cinema.repository.CinemaRepository;
@@ -51,6 +53,14 @@ public class TicketService {
             ticketDTO.setMovieTitle(ticket.getMovie().getTitle());
             ticketDTO.setScreeningDate(ticket.getScreeningSchedule().getDate());
             ticketDTO.setScreeningFormat(ticket.getScreeningSchedule().getFormat());
+
+            Order order = ticket.getOrder();
+            if (order != null) {
+                ticketDTO.setPaid(order.isPaid());
+            }
+
+            Movie movie = ticket.getMovie();
+            ticketDTO.setImageUrl(movie.getImageUrl());
 
             return ticketDTO;
         } else {
