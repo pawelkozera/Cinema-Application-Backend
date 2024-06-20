@@ -82,6 +82,21 @@ public class ScreeningScheduleController {
         return ResponseEntity.ok(screeningSchedulesDTO);
     }
 
+    @GetMapping("/getUpcomingSchedules")
+    public ResponseEntity<List<ScreeningScheduleDTO>> getUpcomingScreeningSchedule(Authentication authentication) {
+        UserAuthentication userAuthentication = new UserAuthentication();
+        if (!userAuthentication.checkAuthentication(authentication)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!userAuthentication.checkRole(authentication, Role.ADMIN)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        List<ScreeningScheduleDTO> screeningSchedulesDTO = screeningScheduleService.getUpcomingScreeningSchedules();
+        return ResponseEntity.ok(screeningSchedulesDTO);
+    }
+
     @GetMapping("/getTakenSeats/{scheduleId}")
     public ResponseEntity<ScreeningScheduleDTO> getTakenSeats(@PathVariable Long scheduleId) {
         ScreeningScheduleDTO screeningSchedulesDTO = screeningScheduleService.getTakenSeats(scheduleId);

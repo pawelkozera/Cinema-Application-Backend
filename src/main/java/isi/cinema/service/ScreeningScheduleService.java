@@ -11,10 +11,7 @@ import isi.cinema.repository.ScreeningScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -56,6 +53,15 @@ public class ScreeningScheduleService {
     public List<ScreeningScheduleDTO> getAllScreeningSchedules() {
         Iterable<ScreeningSchedule> screeningSchedules = screeningScheduleRepository.findAll();
         return StreamSupport.stream(screeningSchedules.spliterator(), false)
+                .map(schedule -> new ScreeningScheduleDTO(schedule.getId(), schedule.getDate(), schedule.getFormat()))
+                .collect(Collectors.toList());
+    }
+
+
+    public List<ScreeningScheduleDTO> getUpcomingScreeningSchedules() {
+        Date currentDate = new Date();
+        List<ScreeningSchedule> screeningSchedules = screeningScheduleRepository.findUpcoming(currentDate);
+        return screeningSchedules.stream()
                 .map(schedule -> new ScreeningScheduleDTO(schedule.getId(), schedule.getDate(), schedule.getFormat()))
                 .collect(Collectors.toList());
     }
