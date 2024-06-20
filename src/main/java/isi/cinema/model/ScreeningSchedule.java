@@ -34,7 +34,7 @@ public class ScreeningSchedule {
     @JoinColumn(name="roomId")
     private Room room;
 
-    protected ScreeningSchedule() {}
+    public ScreeningSchedule() {}
 
     public ScreeningSchedule(Date date, String format) {
         this.date = date;

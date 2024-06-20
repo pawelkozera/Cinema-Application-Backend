@@ -37,7 +37,7 @@ public class Ticket {
     @OneToOne(mappedBy = "ticket")
     private Order order;
 
-    protected Ticket() {}
+    public Ticket() {}
 
     public Ticket(String price, List<String> seats, int amount, User user, Movie movie, ScreeningSchedule screeningSchedule) {
         this.price = price;

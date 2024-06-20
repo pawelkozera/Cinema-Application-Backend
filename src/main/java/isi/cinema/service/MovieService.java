@@ -59,19 +59,19 @@ public class MovieService {
         Movie movieToDelete = movieRepository.findById(id).orElse(null);
 
         if (movieToDelete != null) {
-            for (Cinema cinema : movieToDelete.getCinemas()) {
-                cinema.getMovies().remove(movieToDelete);
-            }
-
-            for (Ticket ticket : movieToDelete.getTickets()) {
-                if (ticket.getMovie() != null) {
-                    return "Cannot delete movie with tickets";
+            if (movieToDelete.getScreeningSchedules() != null) {
+                for (Cinema cinema : movieToDelete.getCinemas()) {
+                    cinema.getMovies().remove(movieToDelete);
                 }
             }
 
-            movieToDelete.getCinemas().clear();
-            movieToDelete.getScreeningSchedules().clear();
-            movieToDelete.getTickets().clear();
+            if (movieToDelete.getTickets() != null) {
+                for (Ticket ticket : movieToDelete.getTickets()) {
+                    if (ticket.getMovie() != null) {
+                        return "Cannot delete movie with tickets";
+                    }
+                }
+            }
 
             movieRepository.delete(movieToDelete);
 
@@ -124,15 +124,18 @@ public class MovieService {
             movieDTO.setCountryProduction(movie.getCountryProduction());
             movieDTO.setYearProduction(movie.getYearProduction());
 
-            List<ScreeningScheduleDTO> screeningDates = movie.getScreeningSchedules().stream()
-                    .map(screeningSchedule -> {
-                        ScreeningScheduleDTO scheduleDTO = new ScreeningScheduleDTO();
-                        scheduleDTO.setId(screeningSchedule.getId());
-                        scheduleDTO.setDate(screeningSchedule.getDate());
-                        scheduleDTO.setFormat(screeningSchedule.getFormat());
-                        return scheduleDTO;
-                    })
-                    .collect(Collectors.toList());
+            List<ScreeningScheduleDTO> screeningDates = new ArrayList<>();
+            if (movie.getScreeningSchedules() != null) {
+                screeningDates = movie.getScreeningSchedules().stream()
+                        .map(screeningSchedule -> {
+                            ScreeningScheduleDTO scheduleDTO = new ScreeningScheduleDTO();
+                            scheduleDTO.setId(screeningSchedule.getId());
+                            scheduleDTO.setDate(screeningSchedule.getDate());
+                            scheduleDTO.setFormat(screeningSchedule.getFormat());
+                            return scheduleDTO;
+                        })
+                        .collect(Collectors.toList());
+            }
 
             movieDTO.setScreeningDates(screeningDates);
 
@@ -161,15 +164,18 @@ public class MovieService {
         movieDTO.setCountryProduction(movie.getCountryProduction());
         movieDTO.setYearProduction(movie.getYearProduction());
 
-        List<ScreeningScheduleDTO> screeningScheduleDTOs = movie.getScreeningSchedules().stream()
-                .map(screeningSchedule -> {
-                    ScreeningScheduleDTO scheduleDTO = new ScreeningScheduleDTO();
-                    scheduleDTO.setId(screeningSchedule.getId());
-                    scheduleDTO.setDate(screeningSchedule.getDate());
-                    scheduleDTO.setFormat(screeningSchedule.getFormat());
-                    return scheduleDTO;
-                })
-                .collect(Collectors.toList());
+        List<ScreeningScheduleDTO> screeningScheduleDTOs = new ArrayList<>();
+        if (movie.getScreeningSchedules() != null) {
+            screeningScheduleDTOs = movie.getScreeningSchedules().stream()
+                    .map(screeningSchedule -> {
+                        ScreeningScheduleDTO scheduleDTO = new ScreeningScheduleDTO();
+                        scheduleDTO.setId(screeningSchedule.getId());
+                        scheduleDTO.setDate(screeningSchedule.getDate());
+                        scheduleDTO.setFormat(screeningSchedule.getFormat());
+                        return scheduleDTO;
+                    })
+                    .collect(Collectors.toList());
+        }
 
         movieDTO.setScreeningDates(screeningScheduleDTOs);
         movieDTOs.add(movieDTO);

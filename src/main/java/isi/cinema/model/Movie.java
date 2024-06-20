@@ -26,7 +26,6 @@ public class Movie {
     private String type;
     private String imageUrl;
 
-
     @OneToMany(mappedBy = "movie")
     private List<Ticket> tickets;
 
@@ -44,7 +43,7 @@ public class Movie {
                     referencedColumnName = "id"))
     private List<Cinema> cinemas;
 
-    protected Movie() {}
+    public Movie() {}
 
     public Movie(String title, String ageRating, String description, int length, String countryProduction, String yearProduction, String category, String type, String imageUrl, List<ScreeningSchedule> screeningSchedules, List<Cinema> cinemas) {
         this.title = title;

@@ -22,7 +22,7 @@ public class Cinema {
     @OneToMany(mappedBy = "cinema")
     private List<Room> rooms;
 
-    protected Cinema() {}
+    public Cinema() {}
 
     public Cinema(String name) {
         this.name = name;
