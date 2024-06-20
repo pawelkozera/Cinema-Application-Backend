@@ -2,9 +2,7 @@ package isi.cinema.service;
 
 import isi.cinema.DTO.MovieDTO;
 import isi.cinema.DTO.ScreeningScheduleDTO;
-import isi.cinema.model.Movie;
-import isi.cinema.model.Room;
-import isi.cinema.model.ScreeningSchedule;
+import isi.cinema.model.*;
 import isi.cinema.repository.MovieRepository;
 import isi.cinema.repository.RoomRepository;
 import isi.cinema.repository.ScreeningScheduleRepository;
@@ -34,8 +32,27 @@ public class ScreeningScheduleService {
         return screeningScheduleRepository.save(screeningSchedule);
     }
 
-    public void deleteScreeningScheduleById(Long id) {
-        screeningScheduleRepository.deleteById(id);
+    public String deleteScreeningScheduleById(Long id) {
+        ScreeningSchedule screeningScheduleToDelete = screeningScheduleRepository.findById(id).orElse(null);
+
+        if (screeningScheduleToDelete != null) {
+            for (Ticket ticket : screeningScheduleToDelete.getTickets()) {
+                if (ticket.getScreeningSchedule() != null) {
+                    return "Cannot delete screening schedule with tickets";
+                }
+            }
+
+            for (Movie movie : screeningScheduleToDelete.getMovies()) {
+                if (movie.getScreeningSchedules() != null) {
+                    return "Cannot delete screening schedule with movies";
+                }
+            }
+
+            screeningScheduleRepository.deleteById(id);
+            return "Screening schedule deleted successfully";
+        }
+
+        return "Cannot delete screening schedule with id";
     }
 
     public ScreeningSchedule updateScreeningSchedule(Long id, ScreeningSchedule updateScreeningSchedule) {

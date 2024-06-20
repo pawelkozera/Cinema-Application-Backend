@@ -74,9 +74,11 @@ public class MovieService {
             movieToDelete.getTickets().clear();
 
             movieRepository.delete(movieToDelete);
+
+            return "Movie deleted successfully";
         }
 
-        return "Movie deleted successfully";
+        return "Cannot delete movie";
     }
 
 

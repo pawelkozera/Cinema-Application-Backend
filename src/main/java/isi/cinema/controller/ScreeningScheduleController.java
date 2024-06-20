@@ -41,14 +41,20 @@ public class ScreeningScheduleController {
     }
 
     @RequestMapping(value="/delete/{id}", method={RequestMethod.DELETE, RequestMethod.GET})
-    public ResponseEntity<ScreeningSchedule> deleteScreeningSchedule(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<String> deleteScreeningSchedule(@PathVariable Long id, Authentication authentication) {
         UserAuthentication userAuthentication = new UserAuthentication();
         ResponseEntity<ScreeningSchedule> authorizationResponse = (ResponseEntity<ScreeningSchedule>) userAuthentication.checkAdminAuthorization(authentication);
         if (authorizationResponse != null) {
-            return authorizationResponse;
+            ResponseEntity.noContent().build();
         }
 
-        screeningScheduleService.deleteScreeningScheduleById(id);
+        String response = screeningScheduleService.deleteScreeningScheduleById(id);
+        if ("Cannot delete screening schedule with tickets".equals(response)) {
+            return new ResponseEntity<>("Cannot delete screening schedule with tickets", HttpStatus.BAD_REQUEST);
+        } else if ("Cannot delete screening schedule with movies".equals(response)) {
+            return new ResponseEntity<>("Cannot delete screening schedule with movies", HttpStatus.BAD_REQUEST);
+        }
+
         return ResponseEntity.noContent().build();
     }
 
